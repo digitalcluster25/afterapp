@@ -24,11 +24,15 @@ export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHisto
 
   const loadParameterValues = useCallback(() => {
     if (typeof window !== 'undefined') {
-      const allValues: ParameterValue[] = []
+      const today = new Date()
+      const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59)
       
-      console.log('Loading parameter values for metrics:', selectedMetrics)
+      const todayValues: ParameterValue[] = []
       
-      // Load values for each selected parameter
+      console.log('Loading today\'s parameter values for metrics:', selectedMetrics)
+      
+      // Load values for each selected parameter - only today's data
       selectedMetrics.forEach(metric => {
         const key = `parameter_values_${metric.id}`
         const stored = localStorage.getItem(key)
@@ -38,21 +42,28 @@ export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHisto
           const values = JSON.parse(stored)
           console.log(`Found ${values.length} values for parameter ${metric.name}`)
           
-          // Add parameterId to each value for filtering
-          const valuesWithParamId = values.map((value: any) => ({
-            ...value,
-            parameterId: metric.id
-          }))
-          allValues.push(...valuesWithParamId)
+          // Filter only today's values
+          const todayMetricValues = values
+            .filter((value: any) => {
+              const valueDate = new Date(value.date)
+              return valueDate >= todayStart && valueDate <= todayEnd
+            })
+            .map((value: any) => ({
+              ...value,
+              parameterId: metric.id
+            }))
+          
+          console.log(`Found ${todayMetricValues.length} today's values for parameter ${metric.name}`)
+          todayValues.push(...todayMetricValues)
         }
       })
       
-      console.log(`Total values loaded: ${allValues.length}`)
+      console.log(`Total today's values loaded: ${todayValues.length}`)
       
-      // Sort by date (newest first)
-      allValues.sort((a: ParameterValue, b: ParameterValue) => b.timestamp - a.timestamp)
+      // Sort by time (newest first)
+      todayValues.sort((a: ParameterValue, b: ParameterValue) => b.timestamp - a.timestamp)
       
-      setParameterValues(allValues)
+      setParameterValues(todayValues)
     }
   }, [selectedMetrics])
 
@@ -78,9 +89,7 @@ export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHisto
       return new Date(dateString).toLocaleDateString('ru-RU', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        day: 'numeric'
       })
     } catch (error) {
       return dateString
@@ -101,63 +110,40 @@ export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHisto
     return null
   }
 
-  if (parameterValues.length === 0) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
-            История показателей
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-6">
-            <p className="text-muted-foreground mb-2">
-              Нет данных для выбранных показателей
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Добавьте значения в трекере велнеса для отслеживания прогресса
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="w-5 h-5" />
-          История показателей ({parameterValues.length})
+          Показатели на сегодня
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="divide-y">
-          {parameterValues.map((value, index) => (
-            <div key={value.id} className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      {formatDate(value.date)}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <span className="font-medium">
-                      {getParameterName(value.parameterId)}
-                    </span>
-                    <Badge variant="outline">
-                      {value.value} {getParameterUnit(value.parameterId)}
-                    </Badge>
-                  </div>
-                </div>
+      <CardContent className="space-y-4">
+        {selectedMetrics.map((metric) => {
+          // Find today's values for this specific metric
+          const metricValues = parameterValues.filter(value => value.parameterId === metric.id)
+          
+          return (
+            <div key={metric.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div className="flex items-center gap-3">
+                <span className="font-medium">{metric.name}</span>
+                {metricValues.length > 0 ? (
+                  <Badge variant="outline">
+                    {metricValues[0].value} {metric.unit}
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary" className="text-muted-foreground">
+                    Нет данных на сегодня
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Calendar className="w-4 h-4" />
+                <span>Сегодня</span>
               </div>
             </div>
-          ))}
-        </div>
+          )
+        })}
       </CardContent>
     </Card>
   )
