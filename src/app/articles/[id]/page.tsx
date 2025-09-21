@@ -1,4 +1,7 @@
-import { notFound } from 'next/navigation'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { notFound, useParams } from 'next/navigation'
 import { getArticles } from '@/lib/directus'
 import PageHeader from '@/components/PageHeader'
 import PageWrapper from '@/components/PageWrapper'
@@ -6,32 +9,111 @@ import Section from '@/components/Section'
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Calendar, User } from "lucide-react"
+import { Calendar, User, ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from 'next/link'
 
-interface ArticlePageProps {
-  params: Promise<{
-    id: string
-  }>
-}
+export default function ArticlePage() {
+  const params = useParams()
+  const [article, setArticle] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
-  const resolvedParams = await params
-  const articleId = parseInt(resolvedParams.id)
+  useEffect(() => {
+    const loadArticle = async () => {
+      try {
+        const articleId = parseInt(params.id as string)
+        if (isNaN(articleId)) {
+          setError('Неверный ID статьи')
+          return
+        }
 
-  if (isNaN(articleId)) {
-    notFound()
+        setLoading(true)
+        const articlesData = await getArticles()
+        const foundArticle = articlesData.data.find((art: any) => art.id === articleId)
+
+        if (!foundArticle) {
+          setError('Статья не найдена')
+          return
+        }
+
+        setArticle(foundArticle)
+      } catch (err) {
+        console.error('Error loading article:', err)
+        setError('Ошибка загрузки статьи')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadArticle()
+  }, [params.id])
+
+  if (loading) {
+    return (
+      <Section>
+        <PageWrapper>
+          <div className="mb-4">
+            <Link href="/articles">
+              <Button variant="ghost" className="gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Назад к статьям
+              </Button>
+            </Link>
+          </div>
+          <PageHeader title="Загрузка..." />
+          <Card>
+            <CardContent className="flex items-center justify-center py-12">
+              <div className="text-muted-foreground">Загрузка статьи...</div>
+            </CardContent>
+          </Card>
+        </PageWrapper>
+      </Section>
+    )
   }
 
-  const articlesData = await getArticles()
-  const article = articlesData.data.find((art: any) => art.id === articleId)
-
-  if (!article) {
-    notFound()
+  if (error || !article) {
+    return (
+      <Section>
+        <PageWrapper>
+          <div className="mb-4">
+            <Link href="/articles">
+              <Button variant="ghost" className="gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Назад к статьям
+              </Button>
+            </Link>
+          </div>
+          <PageHeader title="Ошибка" />
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <div className="text-center space-y-4">
+                <div className="text-destructive text-lg font-medium">
+                  {error || 'Статья не найдена'}
+                </div>
+                <Link href="/articles">
+                  <Button>Вернуться к статьям</Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </PageWrapper>
+      </Section>
+    )
   }
 
   return (
     <Section>
       <PageWrapper>
+        <div className="mb-4">
+          <Link href="/articles">
+            <Button variant="ghost" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Назад к статьям
+            </Button>
+          </Link>
+        </div>
+        
         <PageHeader title={article.title} />
         
         <Card>
@@ -43,7 +125,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               )}
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                <span>{new Date(article.date_created).toLocaleDateString('ru-RU')}</span>
+                <span>{new Date(article.date_created || article.publishedAt).toLocaleDateString('ru-RU')}</span>
               </div>
               {article.author && (
                 <div className="flex items-center gap-1">
