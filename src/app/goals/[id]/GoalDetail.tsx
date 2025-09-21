@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Goal } from '@/types'
+import { Goal, TrackedParameter } from '@/types'
 import PageWrapper from "@/components/PageWrapper"
 import Section from "@/components/Section"
 import {
@@ -21,6 +21,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ArrowLeft, Trash2, Edit3, Check, X } from "lucide-react"
 import { StatusSelector } from '@/components/StatusSelector'
+import GoalMetricsSelector from '@/components/GoalMetricsSelector'
 
 interface GoalDetailProps {
   goalId: number
@@ -32,6 +33,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
   const [goal, setGoal] = useState<Goal | null>(null)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editingTitle, setEditingTitle] = useState('')
+  const [selectedMetrics, setSelectedMetrics] = useState<TrackedParameter[]>([])
 
   useEffect(() => {
     loadGoal()
@@ -254,8 +256,11 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
         </CardHeader>
       </Card>
 
-
-
+      {/* Goal Metrics Selector */}
+      <GoalMetricsSelector
+        selectedMetrics={selectedMetrics}
+        onMetricsChange={setSelectedMetrics}
+      />
 
       </PageWrapper>
     </Section>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
-import { Goal, TrackedParameter } from '@/types'
+import { Goal } from '@/types'
 import { createGoal, getGoals } from '@/lib/directus'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,11 +11,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import GoalMetricsSelector from './GoalMetricsSelector'
 
 export default function GoalsModule() {
   const [goals, setGoals] = useState<Goal[]>([])
-  const [selectedMetrics, setSelectedMetrics] = useState<TrackedParameter[]>([])
 
   const loadGoals = async () => {
     const data = await getGoals()
@@ -76,7 +74,6 @@ export default function GoalsModule() {
 
       setGoals([...goals, newGoal.data])
       setTitle('')
-      setSelectedMetrics([])
       setShowAddForm(false)
     } catch (error) {
       console.error('Error creating goal:', error)
@@ -136,24 +133,16 @@ export default function GoalsModule() {
               Добавить цель
             </h3>
             
-            <div className="space-y-6">
-              <div className="max-w-md">
-                <Label htmlFor="goal-title" className="text-sm font-medium mb-2">
-                  Название цели
-                </Label>
-                <Input
-                  id="goal-title"
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Введите название цели"
-                />
-              </div>
-
-              {/* Goal Metrics Selector */}
-              <GoalMetricsSelector
-                selectedMetrics={selectedMetrics}
-                onMetricsChange={setSelectedMetrics}
+            <div className="max-w-md">
+              <Label htmlFor="goal-title" className="text-sm font-medium mb-2">
+                Название цели
+              </Label>
+              <Input
+                id="goal-title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Введите название цели"
               />
             </div>
 
@@ -166,10 +155,7 @@ export default function GoalsModule() {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => {
-                  setShowAddForm(false)
-                  setSelectedMetrics([])
-                }}
+                onClick={() => setShowAddForm(false)}
               >
                 Отмена
               </Button>
