@@ -12,23 +12,32 @@ export default function ArticlesModule({ articles }: ArticlesModuleProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
+  // Ensure articles is an array
+  const safeArticles = Array.isArray(articles) ? articles : []
+
   // Get unique categories
-  const categories = ['all', ...Array.from(new Set(articles.map(article => article.category)))]
+  const categories = ['all', ...Array.from(new Set(safeArticles.map(article => article?.category).filter(Boolean)))]
 
   // Filter articles
-  const filteredArticles = articles.filter(article => {
+  const filteredArticles = safeArticles.filter(article => {
+    if (!article) return false
     const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory
-    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = article.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          article.summary?.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesCategory && matchesSearch
   })
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ru-RU', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    if (!dateString) return 'Дата не указана'
+    try {
+      return new Date(dateString).toLocaleDateString('ru-RU', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    } catch (error) {
+      return 'Неверная дата'
+    }
   }
 
   return (
@@ -74,7 +83,7 @@ export default function ArticlesModule({ articles }: ArticlesModuleProps) {
               </div>
               
               <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                {article.title}
+                {article.title || 'Без названия'}
               </h3>
               
               {article.summary && (
@@ -85,7 +94,7 @@ export default function ArticlesModule({ articles }: ArticlesModuleProps) {
               
               <div className="flex justify-between items-center">
                 <time className="text-xs text-gray-500">
-                  {formatDate(article.publishedAt)}
+                  {formatDate(article.publishedAt || article.date_created)}
                 </time>
                 
                 <Link

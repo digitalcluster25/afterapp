@@ -44,8 +44,11 @@ export interface Goal {
 export interface Article {
   id: number
   title: string
-  content: string
-  category: string
-  publishedAt: string
+  content?: string
+  category?: string
+  publishedAt?: string
+  date_created?: string
   summary?: string
+  author?: string
+  description?: string
 }

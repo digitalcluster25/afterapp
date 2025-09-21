@@ -3,6 +3,8 @@ import { WellnessParameter, TrackedParameter, Goal, Article } from '@/types'
 
 const DIRECTUS_URL = process.env.DIRECTUS_URL || 'https://directus-production-3727.up.railway.app'
 
+console.log('Directus URL:', DIRECTUS_URL)
+
 export async function getWellnessParameters(): Promise<{ data: WellnessParameter[] }> {
   try {
     const response = await fetch(`${DIRECTUS_URL}/items/welness_parameters`)
@@ -119,13 +121,23 @@ export async function createGoal(data: Omit<Goal, 'id'>): Promise<{ data: Goal }
 
 export async function getArticles(): Promise<{ data: Article[] }> {
   try {
+    console.log('Fetching articles from:', `${DIRECTUS_URL}/items/spravochnik`)
     const response = await fetch(`${DIRECTUS_URL}/items/spravochnik`)
+    console.log('Response status:', response.status)
+    
     if (!response.ok) {
-      throw new Error('Failed to fetch articles')
+      throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`)
     }
-    return response.json()
+    
+    const data = await response.json()
+    console.log('Articles data received:', data)
+    return data
   } catch (error) {
     console.error('Error fetching articles:', error)
-    return { data: [] }
+    console.log('Using mock articles as fallback')
+    
+    // Import mock articles as fallback
+    const { mockArticles } = await import('@/data/mockArticles')
+    return { data: mockArticles }
   }
 }
