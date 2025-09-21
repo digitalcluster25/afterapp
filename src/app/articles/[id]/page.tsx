@@ -17,7 +17,6 @@ import remarkGfm from 'remark-gfm'
 import ArticleNavigation from '@/components/ArticleNavigation'
 import { generateHeadingId } from '@/lib/heading-utils'
 import { useMemo } from 'react'
-import PageWrapper from '@/components/PageWrapper'
 
 export default function ArticlePage() {
   const params = useParams()
@@ -274,11 +273,11 @@ export default function ArticlePage() {
                 Вернуться к статьям
               </Link>
             </div>
-            </div>
+          </div>
 
           {/* Navigation Sidebar */}
           <ArticleNavigation headings={headings} />
-                </div>
+        </div>
       </PageWrapper>
     </div>
   )
