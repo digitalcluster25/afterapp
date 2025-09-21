@@ -37,9 +37,43 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
   const [selectedMetrics, setSelectedMetrics] = useState<TrackedParameter[]>([])
   const [showMetricsHistory, setShowMetricsHistory] = useState(false)
 
+  const loadSelectedMetrics = () => {
+    if (typeof window !== 'undefined') {
+      const key = `goal_metrics_${goalId}`
+      const stored = localStorage.getItem(key)
+      if (stored) {
+        try {
+          const metrics = JSON.parse(stored)
+          setSelectedMetrics(metrics)
+          // Если есть сохраненные показатели, показываем историю
+          if (metrics.length > 0) {
+            setShowMetricsHistory(true)
+          }
+        } catch (error) {
+          console.error('Error loading selected metrics:', error)
+        }
+      }
+    }
+  }
+
+  const saveSelectedMetrics = (metrics: TrackedParameter[]) => {
+    if (typeof window !== 'undefined') {
+      const key = `goal_metrics_${goalId}`
+      localStorage.setItem(key, JSON.stringify(metrics))
+    }
+  }
+
   useEffect(() => {
     loadGoal()
+    loadSelectedMetrics()
   }, [goalId])
+
+  // Сохраняем показатели при их изменении
+  useEffect(() => {
+    if (selectedMetrics.length > 0) {
+      saveSelectedMetrics(selectedMetrics)
+    }
+  }, [selectedMetrics])
 
   const loadGoal = () => {
     if (typeof window !== 'undefined') {
@@ -134,6 +168,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
 
   const handleAddMetrics = () => {
     if (selectedMetrics.length > 0) {
+      saveSelectedMetrics(selectedMetrics)
       setShowMetricsHistory(true)
     }
   }
