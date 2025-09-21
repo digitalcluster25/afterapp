@@ -123,9 +123,9 @@ export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex gap-12">
+        <div className="relative grid grid-cols-12 gap-6 lg:grid">
           {/* Main Content */}
-          <div className="flex-1 max-w-4xl">
+          <div className="col-span-12 lg:col-span-8">
             {/* Back Button */}
             <div className="mb-8">
               <Link href="/articles" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors">
@@ -171,19 +171,35 @@ export default function ArticlePage() {
                 components={{
                 h1: ({ children }) => {
                   const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  return <h1 id={id} className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>
+                  return (
+                    <section id={id} className="prose dark:prose-invert my-8">
+                      <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>
+                    </section>
+                  )
                 },
                 h2: ({ children }) => {
                   const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  return <h2 id={id} className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>
+                  return (
+                    <section id={id} className="prose dark:prose-invert mb-8">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>
+                    </section>
+                  )
                 },
                 h3: ({ children }) => {
                   const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  return <h3 id={id} className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>
+                  return (
+                    <section id={id} className="prose dark:prose-invert mb-8">
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>
+                    </section>
+                  )
                 },
                 h4: ({ children }) => {
                   const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  return <h4 id={id} className="text-lg font-semibold text-gray-900 mb-2 mt-4">{children}</h4>
+                  return (
+                    <section id={id} className="prose dark:prose-invert mb-8">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2 mt-4">{children}</h4>
+                    </section>
+                  )
                 },
                 p: ({ children }) => <p className="mb-4 text-gray-800 leading-relaxed">{children}</p>,
                 ul: ({ children }) => <ul className="mb-4 ml-6 space-y-2">{children}</ul>,
