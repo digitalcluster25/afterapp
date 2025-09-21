@@ -22,23 +22,6 @@ interface GoalMetricsHistoryProps {
 export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHistoryProps) {
   const [parameterValues, setParameterValues] = useState<ParameterValue[]>([])
 
-  useEffect(() => {
-    loadParameterValues()
-    
-    // Listen for storage changes to update when new values are added
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key && e.key.startsWith('parameter_values_')) {
-        loadParameterValues()
-      }
-    }
-    
-    window.addEventListener('storage', handleStorageChange)
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange)
-    }
-  }, [selectedMetrics, loadParameterValues])
-
   const loadParameterValues = useCallback(() => {
     if (typeof window !== 'undefined') {
       const allValues: ParameterValue[] = []
@@ -72,6 +55,23 @@ export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHisto
       setParameterValues(allValues)
     }
   }, [selectedMetrics])
+
+  useEffect(() => {
+    loadParameterValues()
+    
+    // Listen for storage changes to update when new values are added
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key && e.key.startsWith('parameter_values_')) {
+        loadParameterValues()
+      }
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [selectedMetrics, loadParameterValues])
 
   const formatDate = (dateString: string) => {
     try {
