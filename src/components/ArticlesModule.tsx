@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Article } from '@/types'
 
 interface ArticlesModuleProps {
-  articles: Article[]
+  articles?: Article[]
 }
 
 export default function ArticlesModule({ articles }: ArticlesModuleProps) {

@@ -17,8 +17,16 @@ export default function ArticlesPage() {
     const loadArticles = async () => {
       try {
         setLoading(true)
+        setError(null)
+        
         const articlesData = await getArticles()
-        setArticles(articlesData.data || [])
+        const articlesArray = articlesData?.data || []
+        
+        setArticles(articlesArray)
+        
+        if (articlesArray.length === 0) {
+          setError('Статьи не найдены')
+        }
       } catch (err) {
         console.error('Error loading articles:', err)
         setError('Ошибка загрузки статей')
@@ -46,7 +54,7 @@ export default function ArticlesPage() {
     )
   }
 
-  if (error) {
+  if (error && articles.length === 0) {
     return (
       <Section>
         <PageWrapper>

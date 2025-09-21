@@ -119,10 +119,22 @@ export async function createGoal(data: Omit<Goal, 'id'>): Promise<{ data: Goal }
 
 export async function getArticles(): Promise<{ data: Article[] }> {
   try {
-    const response = await fetch(`${DIRECTUS_URL}/items/spravochnik`)
+    // Add timeout and proper error handling
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+    
+    const response = await fetch(`${DIRECTUS_URL}/items/spravochnik`, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    
+    clearTimeout(timeoutId)
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`)
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
     }
     
     const data = await response.json()
@@ -130,8 +142,13 @@ export async function getArticles(): Promise<{ data: Article[] }> {
   } catch (error) {
     console.error('Error fetching articles:', error)
     
-    // Import mock articles as fallback
-    const { mockArticles } = await import('@/data/mockArticles')
-    return { data: mockArticles }
+    // Always return mock articles as fallback
+    try {
+      const { mockArticles } = await import('@/data/mockArticles')
+      return { data: mockArticles }
+    } catch (importError) {
+      console.error('Error importing mock articles:', importError)
+      return { data: [] }
+    }
   }
 }
