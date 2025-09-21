@@ -14,12 +14,15 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { useHeadings } from '@/hooks/use-headings'
+import ArticleNavigation from '@/components/ArticleNavigation'
 
 export default function ArticlePage() {
   const params = useParams()
   const [article, setArticle] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const headings = useHeadings(article?.content || '')
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -119,17 +122,20 @@ export default function ArticlePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        {/* Back Button */}
-        <div className="mb-8">
-          <Link href="/articles" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Назад к статьям
-          </Link>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex gap-12">
+          {/* Main Content */}
+          <div className="flex-1 max-w-4xl">
+            {/* Back Button */}
+            <div className="mb-8">
+              <Link href="/articles" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Назад к статьям
+              </Link>
+            </div>
 
-        {/* Article Header */}
-        <header className="mb-12">
+            {/* Article Header */}
+            <header className="mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
             {article.title}
           </h1>
@@ -163,10 +169,22 @@ export default function ArticlePage() {
               <ReactMarkdown 
                 remarkPlugins={[remarkGfm]}
                 components={{
-                h1: ({ children }) => <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>,
-                h2: ({ children }) => <h2 className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>,
-                h3: ({ children }) => <h3 className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>,
-                h4: ({ children }) => <h4 className="text-lg font-semibold text-gray-900 mb-2 mt-4">{children}</h4>,
+                h1: ({ children }) => {
+                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  return <h1 id={id} className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>
+                },
+                h2: ({ children }) => {
+                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  return <h2 id={id} className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>
+                },
+                h3: ({ children }) => {
+                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  return <h3 id={id} className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>
+                },
+                h4: ({ children }) => {
+                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  return <h4 id={id} className="text-lg font-semibold text-gray-900 mb-2 mt-4">{children}</h4>
+                },
                 p: ({ children }) => <p className="mb-4 text-gray-800 leading-relaxed">{children}</p>,
                 ul: ({ children }) => <ul className="mb-4 ml-6 space-y-2">{children}</ul>,
                 ol: ({ children }) => <ol className="mb-4 ml-6 space-y-2">{children}</ol>,
@@ -190,12 +208,17 @@ export default function ArticlePage() {
           )}
         </article>
 
-        {/* Back to Articles */}
-        <div className="mt-16 pt-8 border-t border-gray-200">
-          <Link href="/articles" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Вернуться к статьям
-          </Link>
+            {/* Back to Articles */}
+            <div className="mt-16 pt-8 border-t border-gray-200">
+              <Link href="/articles" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Вернуться к статьям
+              </Link>
+            </div>
+          </div>
+
+          {/* Navigation Sidebar */}
+          <ArticleNavigation headings={headings} />
         </div>
       </div>
     </div>
