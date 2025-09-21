@@ -79,7 +79,7 @@ export default function SitemapPage() {
       ]
     },
     {
-      title: 'Онлайн журнал',
+      title: 'Блог',
       path: '/articles',
       description: 'Статьи о здоровье, активности и велнесе с научным обоснованием',
       icon: BookOpen,

@@ -15,7 +15,7 @@ export default function Navigation() {
     { href: '/', label: 'Велнес дашборд' },
     { href: '/wellness-tracker', label: 'Трекер' },
     { href: '/goals', label: 'Цели' },
-    { href: '/articles', label: 'Онлайн журнал' },
+    { href: '/articles', label: 'Блог' },
   ]
 
   return (
