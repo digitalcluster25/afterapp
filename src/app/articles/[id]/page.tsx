@@ -17,6 +17,7 @@ import remarkGfm from 'remark-gfm'
 import ArticleNavigation from '@/components/ArticleNavigation'
 import { generateHeadingId } from '@/lib/heading-utils'
 import { useMemo } from 'react'
+import PageWrapper from '@/components/PageWrapper'
 
 export default function ArticlePage() {
   const params = useParams()
@@ -64,13 +65,13 @@ export default function ArticlePage() {
     const loadArticle = async () => {
       try {
         const articleId = parseInt(params.id as string)
-        if (isNaN(articleId)) {
+  if (isNaN(articleId)) {
           setError('Неверный ID статьи')
           return
-        }
+  }
 
         setLoading(true)
-        const articlesData = await getArticles()
+  const articlesData = await getArticles()
         const foundArticle = articlesData.data.find((art: any) => art.id === articleId)
 
         if (!foundArticle) {
@@ -114,9 +115,9 @@ export default function ArticlePage() {
   }
 
   if (error || !article) {
-    return (
-      <Section>
-        <PageWrapper>
+  return (
+    <Section>
+      <PageWrapper>
           <div className="mb-4">
             <Link href="/articles">
               <Button variant="ghost" className="gap-2">
@@ -126,7 +127,7 @@ export default function ArticlePage() {
             </Link>
           </div>
           <PageHeader title="Ошибка" />
-          <Card>
+        <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <div className="text-center space-y-4">
                 <div className="text-destructive text-lg font-medium">
@@ -158,7 +159,7 @@ export default function ArticlePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <PageWrapper className="py-12">
         <div className="relative grid grid-cols-12 gap-6 lg:grid">
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-8">
@@ -178,17 +179,17 @@ export default function ArticlePage() {
           
           {/* Meta Information */}
           <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8">
-            {article.author && (
+              {article.author && (
               <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
+                  <User className="h-4 w-4" />
                 <span className="font-medium">{article.author}</span>
-              </div>
-            )}
+                </div>
+              )}
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               <time>{formatDate(article.publishedAt || article.date_created)}</time>
             </div>
-          </div>
+            </div>
 
           {/* Summary */}
           {article.summary && (
@@ -198,9 +199,9 @@ export default function ArticlePage() {
           )}
         </header>
 
-        {/* Article Content */}
+            {/* Article Content */}
         <article className="prose prose-lg prose-gray max-w-none">
-          {article.content ? (
+              {article.content ? (
             <div className="text-gray-800 leading-relaxed">
               <ReactMarkdown 
                 remarkPlugins={[remarkGfm]}
@@ -273,12 +274,12 @@ export default function ArticlePage() {
                 Вернуться к статьям
               </Link>
             </div>
-          </div>
+            </div>
 
           {/* Navigation Sidebar */}
           <ArticleNavigation headings={headings} />
-        </div>
-      </div>
+                </div>
+      </PageWrapper>
     </div>
   )
 }
