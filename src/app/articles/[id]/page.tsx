@@ -102,66 +102,78 @@ export default function ArticlePage() {
     )
   }
 
+  const formatDate = (dateString: string) => {
+    if (!dateString) return 'Дата не указана'
+    try {
+      return new Date(dateString).toLocaleDateString('ru-RU', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    } catch (error) {
+      return 'Неверная дата'
+    }
+  }
+
   return (
-    <Section>
-      <PageWrapper>
-        <div className="mb-4">
-          <Link href="/articles">
-            <Button variant="ghost" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Назад к статьям
-            </Button>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Back Button */}
+        <div className="mb-8">
+          <Link href="/articles" className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Назад к статьям
           </Link>
         </div>
-        
-        <PageHeader title={article.title} />
-        
-        <Card>
-          <CardContent className="p-8">
-            {/* Article Meta */}
-            <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-muted-foreground">
-              {article.category && (
-                <Badge variant="secondary">{article.category}</Badge>
-              )}
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <span>{new Date(article.date_created || article.publishedAt).toLocaleDateString('ru-RU')}</span>
+
+        {/* Article Header */}
+        <header className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+            {article.title}
+          </h1>
+          
+          {/* Meta Information */}
+          <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-8">
+            {article.author && (
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span className="font-medium">{article.author}</span>
               </div>
-              {article.author && (
-                <div className="flex items-center gap-1">
-                  <User className="h-4 w-4" />
-                  <span>{article.author}</span>
-                </div>
-              )}
-            </div>
-
-            <Separator className="mb-6" />
-
-            {/* Article Content */}
-            <div className="prose prose-gray max-w-none">
-              {article.content ? (
-                <div 
-                  dangerouslySetInnerHTML={{ __html: article.content }}
-                  className="text-foreground leading-relaxed"
-                />
-              ) : (
-                <p className="text-muted-foreground">Содержание статьи недоступно</p>
-              )}
-            </div>
-
-            {/* Article Description */}
-            {article.description && (
-              <>
-                <Separator className="my-6" />
-                <div className="bg-muted/30 rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">Описание</h3>
-                  <p className="text-muted-foreground">{article.description}</p>
-                </div>
-              </>
             )}
-          </CardContent>
-        </Card>
-      </PageWrapper>
-    </Section>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              <time>{formatDate(article.publishedAt || article.date_created)}</time>
+            </div>
+          </div>
+
+          {/* Summary */}
+          {article.summary && (
+            <p className="text-xl text-gray-600 leading-relaxed">
+              {article.summary}
+            </p>
+          )}
+        </header>
+
+        {/* Article Content */}
+        <article className="prose prose-lg prose-gray max-w-none">
+          {article.content ? (
+            <div 
+              dangerouslySetInnerHTML={{ __html: article.content }}
+              className="text-gray-800 leading-relaxed space-y-6"
+            />
+          ) : (
+            <p className="text-gray-500 italic">Содержание статьи недоступно</p>
+          )}
+        </article>
+
+        {/* Back to Articles */}
+        <div className="mt-16 pt-8 border-t border-gray-200">
+          <Link href="/articles" className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Вернуться к статьям
+          </Link>
+        </div>
+      </div>
+    </div>
   )
 }
