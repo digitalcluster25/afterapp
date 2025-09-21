@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { useHeadings } from '@/hooks/use-headings'
 import ArticleNavigation from '@/components/ArticleNavigation'
 import { generateHeadingId } from '@/lib/heading-utils'
 
@@ -23,7 +22,7 @@ export default function ArticlePage() {
   const [article, setArticle] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const headings = useHeadings(article?.content || '')
+  const [headings, setHeadings] = useState<{id: string, text: string, level: number}[]>([])
   const [existingIds, setExistingIds] = useState<string[]>([])
 
   useEffect(() => {
@@ -46,6 +45,7 @@ export default function ArticlePage() {
 
         setArticle(foundArticle)
         setExistingIds([]) // Reset existing IDs for new article
+        setHeadings([]) // Reset headings for new article
       } catch (err) {
         console.error('Error loading article:', err)
         setError('Ошибка загрузки статьи')
@@ -176,6 +176,16 @@ export default function ArticlePage() {
                   const text = children?.toString() || ''
                   const id = generateHeadingId(text, existingIds)
                   setExistingIds(prev => [...prev, id])
+                  
+                  // Register heading in navigation
+                  setHeadings(prev => {
+                    const exists = prev.some(h => h.id === id)
+                    if (!exists) {
+                      return [...prev, { id, text, level: 1 }]
+                    }
+                    return prev
+                  })
+                  
                   return (
                     <section id={id} className="prose dark:prose-invert my-8">
                       <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>
@@ -186,6 +196,16 @@ export default function ArticlePage() {
                   const text = children?.toString() || ''
                   const id = generateHeadingId(text, existingIds)
                   setExistingIds(prev => [...prev, id])
+                  
+                  // Register heading in navigation
+                  setHeadings(prev => {
+                    const exists = prev.some(h => h.id === id)
+                    if (!exists) {
+                      return [...prev, { id, text, level: 2 }]
+                    }
+                    return prev
+                  })
+                  
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h2 className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>

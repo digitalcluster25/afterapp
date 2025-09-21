@@ -57,9 +57,13 @@ export default function ArticleNavigation({ headings }: ArticleNavigationProps) 
                 href={`#${heading.id}`}
                 onClick={(e) => {
                   e.preventDefault()
+                  console.log('Clicking on heading:', heading.id, heading.text)
                   const element = document.getElementById(heading.id)
+                  console.log('Found element:', element)
                   if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  } else {
+                    console.error('Element not found for ID:', heading.id)
                   }
                 }}
                 className={cn(
