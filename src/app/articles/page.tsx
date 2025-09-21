@@ -7,9 +7,10 @@ import PageHeader from '@/components/PageHeader'
 import PageWrapper from '@/components/PageWrapper'
 import Section from '@/components/Section'
 import { Card, CardContent } from '@/components/ui/card'
+import { Article } from '@/types'
 
 export default function ArticlesPage() {
-  const [articles, setArticles] = useState([])
+  const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

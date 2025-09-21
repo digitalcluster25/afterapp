@@ -45,7 +45,7 @@ const statuses: Status[] = [
 
 interface StatusSelectorProps {
   selectedStatus: string
-  onStatusChange: (status: string) => void
+  onStatusChange: (status: 'active' | 'completed' | 'paused') => void
 }
 
 export function StatusSelector({ selectedStatus, onStatusChange }: StatusSelectorProps) {
@@ -90,7 +90,7 @@ function StatusList({
   onStatusChange,
 }: {
   setOpen: (open: boolean) => void
-  onStatusChange: (status: string) => void
+  onStatusChange: (status: 'active' | 'completed' | 'paused') => void
 }) {
   return (
     <Command>
@@ -101,7 +101,7 @@ function StatusList({
               key={status.value}
               value={status.value}
               onSelect={(value) => {
-                onStatusChange(value)
+                onStatusChange(value as 'active' | 'completed' | 'paused')
                 setOpen(false)
               }}
             >

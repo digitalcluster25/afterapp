@@ -51,7 +51,7 @@ export default function ArticlesModule({ articles }: ArticlesModuleProps) {
                     <span className="font-medium">{article.author || 'Автор не указан'}</span>
                     <span>•</span>
                     <time>
-                      {formatDate(article.publishedAt || article.date_created)}
+                      {formatDate(article.publishedAt || article.date_created || '')}
                     </time>
                   </div>
                   
