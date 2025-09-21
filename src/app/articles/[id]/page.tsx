@@ -16,14 +16,49 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import ArticleNavigation from '@/components/ArticleNavigation'
 import { generateHeadingId } from '@/lib/heading-utils'
+import { useMemo } from 'react'
 
 export default function ArticlePage() {
   const params = useParams()
   const [article, setArticle] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [headings, setHeadings] = useState<{id: string, text: string, level: number}[]>([])
-  const [existingIds, setExistingIds] = useState<string[]>([])
+  
+  // Extract headings from markdown content
+  const headings = useMemo(() => {
+    if (!article?.content) return []
+    
+    const headingRegex = /^(#{1,2})\s+(.+)$/gm
+    const extractedHeadings: {id: string, text: string, level: number}[] = []
+    const existingIds: string[] = []
+    let match
+
+    while ((match = headingRegex.exec(article.content)) !== null) {
+      const level = match[1].length
+      const text = match[2].trim()
+      
+      // Generate unique ID using utility function
+      const id = generateHeadingId(text, existingIds)
+      existingIds.push(id)
+
+      extractedHeadings.push({
+        id,
+        text,
+        level
+      })
+    }
+
+    return extractedHeadings
+  }, [article?.content])
+
+  // Create a map of heading text to ID for use in components
+  const headingIdMap = useMemo(() => {
+    const map = new Map<string, string>()
+    headings.forEach(heading => {
+      map.set(heading.text, heading.id)
+    })
+    return map
+  }, [headings])
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -44,8 +79,6 @@ export default function ArticlePage() {
         }
 
         setArticle(foundArticle)
-        setExistingIds([]) // Reset existing IDs for new article
-        setHeadings([]) // Reset headings for new article
       } catch (err) {
         console.error('Error loading article:', err)
         setError('Ошибка загрузки статьи')
@@ -174,17 +207,7 @@ export default function ArticlePage() {
                 components={{
                 h1: ({ children }) => {
                   const text = children?.toString() || ''
-                  const id = generateHeadingId(text, existingIds)
-                  setExistingIds(prev => [...prev, id])
-                  
-                  // Register heading in navigation
-                  setHeadings(prev => {
-                    const exists = prev.some(h => h.id === id)
-                    if (!exists) {
-                      return [...prev, { id, text, level: 1 }]
-                    }
-                    return prev
-                  })
+                  const id = headingIdMap.get(text) || 'heading-1'
                   
                   return (
                     <section id={id} className="prose dark:prose-invert my-8">
@@ -194,17 +217,7 @@ export default function ArticlePage() {
                 },
                 h2: ({ children }) => {
                   const text = children?.toString() || ''
-                  const id = generateHeadingId(text, existingIds)
-                  setExistingIds(prev => [...prev, id])
-                  
-                  // Register heading in navigation
-                  setHeadings(prev => {
-                    const exists = prev.some(h => h.id === id)
-                    if (!exists) {
-                      return [...prev, { id, text, level: 2 }]
-                    }
-                    return prev
-                  })
+                  const id = headingIdMap.get(text) || 'heading-2'
                   
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
@@ -214,8 +227,7 @@ export default function ArticlePage() {
                 },
                 h3: ({ children }) => {
                   const text = children?.toString() || ''
-                  const id = generateHeadingId(text, existingIds)
-                  setExistingIds(prev => [...prev, id])
+                  const id = headingIdMap.get(text) || 'heading-3'
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h3 className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>
@@ -224,8 +236,7 @@ export default function ArticlePage() {
                 },
                 h4: ({ children }) => {
                   const text = children?.toString() || ''
-                  const id = generateHeadingId(text, existingIds)
-                  setExistingIds(prev => [...prev, id])
+                  const id = headingIdMap.get(text) || 'heading-4'
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h4 className="text-lg font-semibold text-gray-900 mb-2 mt-4">{children}</h4>

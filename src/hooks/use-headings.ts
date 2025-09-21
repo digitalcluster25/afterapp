@@ -36,7 +36,6 @@ export function useHeadings(content: string): Heading[] {
       })
     }
 
-    console.log('useHeadings extracted headings:', extractedHeadings)
     setHeadings(extractedHeadings)
   }, [content])
 
