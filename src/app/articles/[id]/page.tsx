@@ -159,10 +159,10 @@ export default function ArticlePage() {
         {/* Article Content */}
         <article className="prose prose-lg prose-gray max-w-none">
           {article.content ? (
-            <ReactMarkdown 
-              remarkPlugins={[remarkGfm]}
-              className="text-gray-800 leading-relaxed"
-              components={{
+            <div className="text-gray-800 leading-relaxed">
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm]}
+                components={{
                 h1: ({ children }) => <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>,
                 h2: ({ children }) => <h2 className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>,
                 h3: ({ children }) => <h3 className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>,
@@ -184,6 +184,7 @@ export default function ArticlePage() {
             >
               {article.content}
             </ReactMarkdown>
+            </div>
           ) : (
             <p className="text-gray-500 italic">Содержание статьи недоступно</p>
           )}
