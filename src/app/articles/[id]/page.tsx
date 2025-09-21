@@ -16,6 +16,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useHeadings } from '@/hooks/use-headings'
 import ArticleNavigation from '@/components/ArticleNavigation'
+import { generateHeadingId } from '@/lib/heading-utils'
 
 export default function ArticlePage() {
   const params = useParams()
@@ -23,6 +24,7 @@ export default function ArticlePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const headings = useHeadings(article?.content || '')
+  const [existingIds, setExistingIds] = useState<string[]>([])
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -43,6 +45,7 @@ export default function ArticlePage() {
         }
 
         setArticle(foundArticle)
+        setExistingIds([]) // Reset existing IDs for new article
       } catch (err) {
         console.error('Error loading article:', err)
         setError('Ошибка загрузки статьи')
@@ -170,8 +173,9 @@ export default function ArticlePage() {
                 remarkPlugins={[remarkGfm]}
                 components={{
                 h1: ({ children }) => {
-                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  const id = baseId || 'heading-1'
+                  const text = children?.toString() || ''
+                  const id = generateHeadingId(text, existingIds)
+                  setExistingIds(prev => [...prev, id])
                   return (
                     <section id={id} className="prose dark:prose-invert my-8">
                       <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>
@@ -179,8 +183,9 @@ export default function ArticlePage() {
                   )
                 },
                 h2: ({ children }) => {
-                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  const id = baseId || 'heading-2'
+                  const text = children?.toString() || ''
+                  const id = generateHeadingId(text, existingIds)
+                  setExistingIds(prev => [...prev, id])
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h2 className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>
@@ -188,8 +193,9 @@ export default function ArticlePage() {
                   )
                 },
                 h3: ({ children }) => {
-                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  const id = baseId || 'heading-3'
+                  const text = children?.toString() || ''
+                  const id = generateHeadingId(text, existingIds)
+                  setExistingIds(prev => [...prev, id])
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h3 className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>
@@ -197,8 +203,9 @@ export default function ArticlePage() {
                   )
                 },
                 h4: ({ children }) => {
-                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
-                  const id = baseId || 'heading-4'
+                  const text = children?.toString() || ''
+                  const id = generateHeadingId(text, existingIds)
+                  setExistingIds(prev => [...prev, id])
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h4 className="text-lg font-semibold text-gray-900 mb-2 mt-4">{children}</h4>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { generateHeadingId } from '@/lib/heading-utils'
 
 export interface Heading {
   id: string
@@ -24,26 +25,12 @@ export function useHeadings(content: string): Heading[] {
       const level = match[1].length
       const text = match[2].trim()
       
-      // Generate unique ID with index to avoid duplicates
-      const baseId = text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .trim()
-      
-      // Ensure ID is not empty and add index if needed
-      let id = baseId || `heading-${extractedHeadings.length}`
-      
-      // Check for duplicates and add index
-      let counter = 1
-      let finalId = id
-      while (extractedHeadings.some(h => h.id === finalId)) {
-        finalId = `${id}-${counter}`
-        counter++
-      }
+      // Generate unique ID using utility function
+      const existingIds = extractedHeadings.map(h => h.id)
+      const id = generateHeadingId(text, existingIds)
 
       extractedHeadings.push({
-        id: finalId,
+        id,
         text,
         level
       })
