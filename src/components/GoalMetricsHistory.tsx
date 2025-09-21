@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { TrackedParameter } from '@/types'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -24,25 +24,54 @@ export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHisto
 
   useEffect(() => {
     loadParameterValues()
-  }, [selectedMetrics])
+    
+    // Listen for storage changes to update when new values are added
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key && e.key.startsWith('parameter_values_')) {
+        loadParameterValues()
+      }
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [selectedMetrics, loadParameterValues])
 
-  const loadParameterValues = () => {
+  const loadParameterValues = useCallback(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('parameter_values')
-      const allValues = stored ? JSON.parse(stored) : []
+      const allValues: ParameterValue[] = []
       
-      // Filter values for selected metrics only
-      const selectedParameterIds = selectedMetrics.map(m => m.id)
-      const filteredValues = allValues.filter((value: ParameterValue) => 
-        selectedParameterIds.includes(value.parameterId)
-      )
+      console.log('Loading parameter values for metrics:', selectedMetrics)
+      
+      // Load values for each selected parameter
+      selectedMetrics.forEach(metric => {
+        const key = `parameter_values_${metric.id}`
+        const stored = localStorage.getItem(key)
+        console.log(`Checking key: ${key}`, stored ? 'found' : 'not found')
+        
+        if (stored) {
+          const values = JSON.parse(stored)
+          console.log(`Found ${values.length} values for parameter ${metric.name}`)
+          
+          // Add parameterId to each value for filtering
+          const valuesWithParamId = values.map((value: any) => ({
+            ...value,
+            parameterId: metric.id
+          }))
+          allValues.push(...valuesWithParamId)
+        }
+      })
+      
+      console.log(`Total values loaded: ${allValues.length}`)
       
       // Sort by date (newest first)
-      filteredValues.sort((a: ParameterValue, b: ParameterValue) => b.timestamp - a.timestamp)
+      allValues.sort((a: ParameterValue, b: ParameterValue) => b.timestamp - a.timestamp)
       
-      setParameterValues(filteredValues)
+      setParameterValues(allValues)
     }
-  }
+  }, [selectedMetrics])
 
   const formatDate = (dateString: string) => {
     try {
