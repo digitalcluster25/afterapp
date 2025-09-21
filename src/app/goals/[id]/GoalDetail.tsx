@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input"
 import { ArrowLeft, Trash2, Edit3, Check, X } from "lucide-react"
 import { StatusSelector } from '@/components/StatusSelector'
 import GoalMetricsSelector from '@/components/GoalMetricsSelector'
+import GoalMetricsHistory from '@/components/GoalMetricsHistory'
 
 interface GoalDetailProps {
   goalId: number
@@ -34,6 +35,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editingTitle, setEditingTitle] = useState('')
   const [selectedMetrics, setSelectedMetrics] = useState<TrackedParameter[]>([])
+  const [showMetricsHistory, setShowMetricsHistory] = useState(false)
 
   useEffect(() => {
     loadGoal()
@@ -127,6 +129,12 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
         newValue: JSON.stringify(updatedGoals),
         storageArea: localStorage
       }))
+    }
+  }
+
+  const handleAddMetrics = () => {
+    if (selectedMetrics.length > 0) {
+      setShowMetricsHistory(true)
     }
   }
 
@@ -257,10 +265,26 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
       </Card>
 
       {/* Goal Metrics Selector */}
-      <GoalMetricsSelector
-        selectedMetrics={selectedMetrics}
-        onMetricsChange={setSelectedMetrics}
-      />
+      <div className="space-y-4">
+        <GoalMetricsSelector
+          selectedMetrics={selectedMetrics}
+          onMetricsChange={setSelectedMetrics}
+        />
+        
+        {/* Add Metrics Button */}
+        {selectedMetrics.length > 0 && !showMetricsHistory && (
+          <div className="flex justify-center">
+            <Button onClick={handleAddMetrics}>
+              Добавить показатели
+            </Button>
+          </div>
+        )}
+        
+        {/* Metrics History */}
+        {showMetricsHistory && (
+          <GoalMetricsHistory selectedMetrics={selectedMetrics} />
+        )}
+      </div>
 
       </PageWrapper>
     </Section>
