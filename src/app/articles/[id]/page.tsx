@@ -170,7 +170,8 @@ export default function ArticlePage() {
                 remarkPlugins={[remarkGfm]}
                 components={{
                 h1: ({ children }) => {
-                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const id = baseId || 'heading-1'
                   return (
                     <section id={id} className="prose dark:prose-invert my-8">
                       <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 first:mt-0">{children}</h1>
@@ -178,7 +179,8 @@ export default function ArticlePage() {
                   )
                 },
                 h2: ({ children }) => {
-                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const id = baseId || 'heading-2'
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h2 className="text-2xl font-bold text-gray-900 mb-4 mt-8">{children}</h2>
@@ -186,7 +188,8 @@ export default function ArticlePage() {
                   )
                 },
                 h3: ({ children }) => {
-                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const id = baseId || 'heading-3'
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h3 className="text-xl font-bold text-gray-900 mb-3 mt-6">{children}</h3>
@@ -194,7 +197,8 @@ export default function ArticlePage() {
                   )
                 },
                 h4: ({ children }) => {
-                  const id = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const baseId = children?.toString().toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim()
+                  const id = baseId || 'heading-4'
                   return (
                     <section id={id} className="prose dark:prose-invert mb-8">
                       <h4 className="text-lg font-semibold text-gray-900 mb-2 mt-4">{children}</h4>

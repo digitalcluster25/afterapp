@@ -23,14 +23,27 @@ export function useHeadings(content: string): Heading[] {
     while ((match = headingRegex.exec(content)) !== null) {
       const level = match[1].length
       const text = match[2].trim()
-      const id = text
+      
+      // Generate unique ID with index to avoid duplicates
+      const baseId = text
         .toLowerCase()
         .replace(/[^\w\s-]/g, '')
         .replace(/\s+/g, '-')
         .trim()
+      
+      // Ensure ID is not empty and add index if needed
+      let id = baseId || `heading-${extractedHeadings.length}`
+      
+      // Check for duplicates and add index
+      let counter = 1
+      let finalId = id
+      while (extractedHeadings.some(h => h.id === finalId)) {
+        finalId = `${id}-${counter}`
+        counter++
+      }
 
       extractedHeadings.push({
-        id,
+        id: finalId,
         text,
         level
       })
