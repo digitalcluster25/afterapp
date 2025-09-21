@@ -15,8 +15,8 @@ export function useHeadings(content: string): Heading[] {
       return
     }
 
-    // Extract headings from markdown content
-    const headingRegex = /^(#{1,6})\s+(.+)$/gm
+    // Extract headings from markdown content (only H1 and H2)
+    const headingRegex = /^(#{1,2})\s+(.+)$/gm
     const extractedHeadings: Heading[] = []
     let match
 
