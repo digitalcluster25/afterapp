@@ -43,7 +43,7 @@ export default function ArticlesPage() {
     return (
       <Section>
         <PageWrapper>
-          <PageHeader title="Онлайн журнал" />
+          <PageHeader title="Блог" />
           <Card>
             <CardContent className="flex items-center justify-center py-12">
               <div className="text-muted-foreground">Загрузка статей...</div>
@@ -58,7 +58,7 @@ export default function ArticlesPage() {
     return (
       <Section>
         <PageWrapper>
-          <PageHeader title="Онлайн журнал" />
+          <PageHeader title="Блог" />
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <div className="text-center space-y-4">
