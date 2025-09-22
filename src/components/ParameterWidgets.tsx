@@ -107,7 +107,7 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
   const getTrendText = () => {
     switch (parameter.trend) {
       case 'up':
-        return 'Рост показателей'
+        return `Рост показателей на ${parameter.trendPercentage.toFixed(1)}%`
       case 'down':
         return `Снижение показателей на ${parameter.trendPercentage.toFixed(1)}%`
       default:
