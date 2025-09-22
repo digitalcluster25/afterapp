@@ -390,10 +390,8 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
           </div>
         )}
         
-        {/* Metrics History */}
-        {showMetricsHistory && (
-          <GoalMetricsHistory selectedMetrics={selectedMetrics} goalValue={goalValue} />
-        )}
+        {/* Metrics History - Always show goal value */}
+        <GoalMetricsHistory selectedMetrics={selectedMetrics} goalValue={goalValue} />
       </div>
 
       {/* Article Selector */}
