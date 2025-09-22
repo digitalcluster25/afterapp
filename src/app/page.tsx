@@ -12,8 +12,8 @@ export default function HomePage() {
       <PageWrapper>
         <PageHeader title="Дашборд" />
         <div className="space-y-8">
-          <WellnessDashboard />
           <GoalsStatusWidget />
+          <WellnessDashboard />
         </div>
       </PageWrapper>
     </Section>
