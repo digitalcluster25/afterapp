@@ -68,10 +68,13 @@ npm run dev
 ## 📖 Документация
 
 ### Полная документация
-- **[PROJECT_DOCUMENTATION.md](./PROJECT_DOCUMENTATION.md)** - Полная документация проекта в формате BRD
-- **[TECHNICAL_SPECIFICATION.md](./TECHNICAL_SPECIFICATION.md)** - Техническая спецификация
-- **[USER_SCENARIOS.md](./USER_SCENARIOS.md)** - Пользовательские сценарии
-- **[SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTIONS.md)** - Инструкции по воссозданию
+Вся подробная документация находится в папке **[docs/](./docs/)**:
+
+- **[docs/PROJECT_DOCUMENTATION.md](./docs/PROJECT_DOCUMENTATION.md)** - Полная документация проекта в формате BRD
+- **[docs/TECHNICAL_SPECIFICATION.md](./docs/TECHNICAL_SPECIFICATION.md)** - Техническая спецификация
+- **[docs/USER_SCENARIOS.md](./docs/USER_SCENARIOS.md)** - Пользовательские сценарии
+- **[docs/SETUP_INSTRUCTIONS.md](./docs/SETUP_INSTRUCTIONS.md)** - Инструкции по воссозданию
+- **[docs/README.md](./docs/README.md)** - Индекс документации
 
 ### Структура проекта
 ```
