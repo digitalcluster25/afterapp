@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Article } from '@/types'
+import { Badge } from "@/components/ui/badge"
 
 interface ArticlesModuleProps {
   articles?: Article[]
@@ -40,6 +41,12 @@ export default function ArticlesModule({ articles }: ArticlesModuleProps) {
                   <h3 className="text-2xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors leading-tight">
                     {article.title || 'Без названия'}
                   </h3>
+                  
+                  {article.category && (
+                    <Badge variant="outline" className="w-fit">
+                      {article.category}
+                    </Badge>
+                  )}
                   
                   {article.summary && (
                     <p className="text-gray-600 text-base leading-relaxed">
