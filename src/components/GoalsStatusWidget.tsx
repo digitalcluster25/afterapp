@@ -122,44 +122,63 @@ export default function GoalsStatusWidget() {
 
   if (goals.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5" />
+      <div className="space-y-6">
+        {/* Заголовок */}
+        <div>
+          <h2 className="text-2xl font-semibold text-foreground">
             Статус целей
-          </CardTitle>
-          <CardDescription>
-            Отслеживайте прогресс ваших целей
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-6">
-            <div className="text-muted-foreground mb-4">
-              У вас пока нет целей
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            Прогресс ваших целей на сегодня
+          </p>
+        </div>
+
+        {/* Виджет целей */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Target className="w-5 h-5" />
+              Цели
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-6">
+              <div className="text-muted-foreground mb-4">
+                У вас пока нет целей
+              </div>
+              <Link 
+                href="/goals" 
+                className="text-primary hover:underline font-medium"
+              >
+                Создать первую цель
+              </Link>
             </div>
-            <Link 
-              href="/goals" 
-              className="text-primary hover:underline font-medium"
-            >
-              Создать первую цель
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Target className="w-5 h-5" />
+    <div className="space-y-6">
+      {/* Заголовок */}
+      <div>
+        <h2 className="text-2xl font-semibold text-foreground">
           Статус целей
-        </CardTitle>
-        <CardDescription>
+        </h2>
+        <p className="text-muted-foreground mt-1">
           Прогресс ваших целей на сегодня
-        </CardDescription>
-      </CardHeader>
+        </p>
+      </div>
+
+      {/* Виджет целей */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="w-5 h-5" />
+            Цели
+          </CardTitle>
+        </CardHeader>
       <CardContent className="space-y-4">
         {goals.map((goal) => (
           <div key={goal.id} className="space-y-2">
@@ -213,6 +232,7 @@ export default function GoalsStatusWidget() {
           </Link>
         </div>
       </CardContent>
-    </Card>
+      </Card>
+    </div>
   )
 }
