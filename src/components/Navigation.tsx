@@ -12,7 +12,7 @@ export default function Navigation() {
   const pathname = usePathname()
 
   const navItems = [
-    { href: '/', label: 'Велнес дашборд' },
+    { href: '/', label: 'Дашборд' },
     { href: '/wellness-tracker', label: 'Трекер' },
     { href: '/goals', label: 'Цели' },
     { href: '/articles', label: 'Блог' },

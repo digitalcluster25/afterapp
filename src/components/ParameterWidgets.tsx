@@ -107,9 +107,9 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
   const getTrendText = () => {
     switch (parameter.trend) {
       case 'up':
-        return `Рост на ${parameter.trendPercentage.toFixed(1)}%`
+        return 'Рост показателей'
       case 'down':
-        return `Снижение на ${parameter.trendPercentage.toFixed(1)}%`
+        return 'Снижение показателей'
       default:
         return 'Стабильные показатели'
     }
@@ -125,7 +125,6 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
           </CardTitle>
           <Badge variant="outline" className={getTrendColor()}>
             {getTrendIcon()}
-            {parameter.trendPercentage > 0 && `${parameter.trendPercentage.toFixed(1)}%`}
           </Badge>
         </div>
       </CardHeader>
