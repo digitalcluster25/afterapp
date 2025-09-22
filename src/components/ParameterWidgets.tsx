@@ -109,7 +109,7 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
       case 'up':
         return 'Рост показателей'
       case 'down':
-        return 'Снижение показателей'
+        return `Снижение показателей на ${parameter.trendPercentage.toFixed(1)}%`
       default:
         return 'Стабильные показатели'
     }
@@ -130,7 +130,7 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1.5 text-sm">
         <div className={`line-clamp-1 flex gap-2 font-medium ${getTrendColor()}`}>
-          {getTrendText()} {getTrendIcon()}
+          {getTrendText()}
         </div>
         <div className="text-muted-foreground">
           Среднее за последние 7 дней
