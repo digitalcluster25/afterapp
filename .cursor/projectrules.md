@@ -14,6 +14,14 @@
 3. **Full Verification**: Before confirming completion, thoroughly verify that all aspects of the request have been implemented and that no unintended side effects have occurred.
 4. **No Partial Implementation**: Avoid committing or reporting completion if any part of the instruction is pending or partially implemented.
 
+## FATAL ERROR PREVENTION RULES (Added after critical incident)
+
+1. **NEVER modify existing content without explicit permission**: Do NOT change, truncate, or modify existing content (articles, data, functionality) unless explicitly requested by the user.
+2. **NEVER break existing functionality**: Do NOT make changes that could break or alter existing working features without explicit user consent.
+3. **ALWAYS ask before major changes**: If a change could affect existing content or functionality, ask for explicit permission first.
+4. **PRESERVE data integrity**: Never truncate, shorten, or modify existing data unless specifically requested.
+5. **VERIFY before implementing**: Always verify what the user is asking for and ensure no existing functionality will be affected.
+
 ## UI/UX Design Rules
 
 ### Component Library
