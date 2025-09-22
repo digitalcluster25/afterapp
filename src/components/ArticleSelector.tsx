@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { BookOpen, ExternalLink } from "lucide-react"
+import { BookOpen, ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
 import Link from 'next/link'
 
 interface ArticleSelectorProps {
@@ -25,6 +25,7 @@ export default function ArticleSelector({ onArticleSelect, selectedArticleId }: 
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     const loadArticles = async () => {
@@ -111,14 +112,45 @@ export default function ArticleSelector({ onArticleSelect, selectedArticleId }: 
 
         {selectedArticle && (
           <div className="border rounded-lg p-4 space-y-3">
-            <div className="flex items-start justify-between">
-              <div className="space-y-2 flex-1">
-                <h4 className="font-medium text-sm">{selectedArticle.title}</h4>
-                {selectedArticle.summary && (
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {selectedArticle.summary}
-                  </p>
+            <div className="space-y-2">
+              <h4 className="font-medium text-2xl">{selectedArticle.title}</h4>
+              {selectedArticle.summary && (
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {selectedArticle.summary}
+                </p>
+              )}
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="gap-2"
+              >
+                {isExpanded ? (
+                  <>
+                    <ChevronUp className="h-3 w-3" />
+                    Скрыть детали
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-3 w-3" />
+                    Показать детали
+                  </>
                 )}
+              </Button>
+              
+              <Link href={`/articles/${selectedArticle.id}`} target="_blank">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <ExternalLink className="h-3 w-3" />
+                  Открыть статью
+                </Button>
+              </Link>
+            </div>
+
+            {isExpanded && (
+              <div className="pt-3 border-t space-y-2">
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">
                     {selectedArticle.category}
@@ -129,16 +161,13 @@ export default function ArticleSelector({ onArticleSelect, selectedArticleId }: 
                     </span>
                   )}
                 </div>
+                {selectedArticle.description && (
+                  <p className="text-xs text-muted-foreground">
+                    {selectedArticle.description}
+                  </p>
+                )}
               </div>
-            </div>
-            <div className="flex justify-end">
-              <Link href={`/articles/${selectedArticle.id}`} target="_blank">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <ExternalLink className="h-3 w-3" />
-                  Открыть статью
-                </Button>
-              </Link>
-            </div>
+            )}
           </div>
         )}
       </CardContent>
