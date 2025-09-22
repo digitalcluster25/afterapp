@@ -22,3 +22,24 @@
 4. **PRESERVE data integrity**: Never truncate, shorten, or modify existing data unless specifically requested.
 5. **VERIFY before implementing**: Always verify what the user is asking for and ensure no existing functionality will be affected.
 
+## DOCUMENTATION RULES (Added for project maintenance)
+
+1. **Documentation as Single Source of Truth**: The `docs/` folder is the ONLY source of truth for project documentation. All project knowledge, specifications, and guidelines must be maintained in the `docs/` folder.
+
+2. **Mandatory Documentation Updates**: Whenever ANY changes are made to project functionality or design, the corresponding documentation in the `docs/` folder MUST be updated immediately. This includes:
+   - Changes to components or their behavior
+   - UI/UX modifications or new design patterns
+   - New features or functionality
+   - Changes to data structures or APIs
+   - Updates to project rules or guidelines
+
+3. **Documentation Completeness**: Before marking any task as complete, verify that all relevant documentation has been updated to reflect the changes made.
+
+4. **Documentation Structure**: Maintain the organized structure in `docs/` folder:
+   - `PROJECT_DOCUMENTATION.md` - Main BRD documentation
+   - `TECHNICAL_SPECIFICATION.md` - Technical details and architecture
+   - `USER_SCENARIOS.md` - User flows and scenarios
+   - `SETUP_INSTRUCTIONS.md` - Setup and deployment instructions
+   - `DESIGN_SYSTEM.md` - Design system and styling rules
+   - `README.md` - Documentation index
+
