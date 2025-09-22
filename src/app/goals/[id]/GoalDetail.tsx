@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Goal, TrackedParameter } from '@/types'
+import { Goal, TrackedParameter, Article } from '@/types'
 import PageWrapper from "@/components/PageWrapper"
 import Section from "@/components/Section"
 import {
@@ -23,6 +23,7 @@ import { ArrowLeft, Trash2, Edit3, Check, X } from "lucide-react"
 import { StatusSelector } from '@/components/StatusSelector'
 import GoalMetricsSelector from '@/components/GoalMetricsSelector'
 import GoalMetricsHistory from '@/components/GoalMetricsHistory'
+import GoalArticleSelector from '@/components/GoalArticleSelector'
 
 interface GoalDetailProps {
   goalId: number
@@ -36,6 +37,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
   const [editingTitle, setEditingTitle] = useState('')
   const [selectedMetrics, setSelectedMetrics] = useState<TrackedParameter[]>([])
   const [showMetricsHistory, setShowMetricsHistory] = useState(false)
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
 
   const loadSelectedMetrics = () => {
     if (typeof window !== 'undefined') {
@@ -56,6 +58,21 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
     }
   }
 
+  const loadSelectedArticle = () => {
+    if (typeof window !== 'undefined') {
+      const key = `goal_article_${goalId}`
+      const stored = localStorage.getItem(key)
+      if (stored) {
+        try {
+          const article = JSON.parse(stored)
+          setSelectedArticle(article)
+        } catch (error) {
+          console.error('Error loading selected article:', error)
+        }
+      }
+    }
+  }
+
   const saveSelectedMetrics = (metrics: TrackedParameter[]) => {
     if (typeof window !== 'undefined') {
       const key = `goal_metrics_${goalId}`
@@ -66,6 +83,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
   useEffect(() => {
     loadGoal()
     loadSelectedMetrics()
+    loadSelectedArticle()
   }, [goalId])
 
   // Сохраняем показатели при их изменении
@@ -171,6 +189,10 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
       saveSelectedMetrics(selectedMetrics)
       setShowMetricsHistory(true)
     }
+  }
+
+  const handleArticleSelect = (article: Article) => {
+    setSelectedArticle(article)
   }
 
   if (!goal) {
@@ -319,6 +341,15 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
         {showMetricsHistory && (
           <GoalMetricsHistory selectedMetrics={selectedMetrics} />
         )}
+      </div>
+
+      {/* Article Selector */}
+      <div className="mt-8">
+        <GoalArticleSelector 
+          onArticleSelect={handleArticleSelect}
+          selectedArticleId={selectedArticle?.id}
+          goalId={goalId}
+        />
       </div>
 
       </PageWrapper>
