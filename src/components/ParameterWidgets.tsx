@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { TrackedParameter } from '@/types'
-import { Badge } from "@/components/ui/badge"
 import {
   Card,
   CardDescription,
@@ -111,9 +110,6 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             {parameter.weekAverage.toFixed(1)} {parameter.unit}
           </CardTitle>
-          <Badge variant="outline" className={getTrendColor()}>
-            {parameter.trend === 'up' ? '↗' : parameter.trend === 'down' ? '↘' : '→'}
-          </Badge>
         </div>
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1.5 text-sm">
