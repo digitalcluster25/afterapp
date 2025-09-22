@@ -5,7 +5,6 @@ import { Article } from '@/types'
 import { getArticles } from '@/lib/directus'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { 
   Select,
   SelectContent,
@@ -13,8 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { BookOpen, ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
-import Link from 'next/link'
+import { BookOpen, ChevronDown, ChevronUp } from "lucide-react"
 
 interface ArticleSelectorProps {
   onArticleSelect?: (article: Article) => void
@@ -121,7 +119,7 @@ export default function ArticleSelector({ onArticleSelect, selectedArticleId }: 
               )}
             </div>
             
-            <div className="flex justify-between items-center">
+            <div className="flex justify-center">
               <Button
                 variant="outline"
                 size="sm"
@@ -140,32 +138,15 @@ export default function ArticleSelector({ onArticleSelect, selectedArticleId }: 
                   </>
                 )}
               </Button>
-              
-              <Link href={`/articles/${selectedArticle.id}`} target="_blank">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <ExternalLink className="h-3 w-3" />
-                  Открыть статью
-                </Button>
-              </Link>
             </div>
 
             {isExpanded && (
-              <div className="pt-3 border-t space-y-2">
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs">
-                    {selectedArticle.category}
-                  </Badge>
-                  {selectedArticle.author && (
-                    <span className="text-xs text-muted-foreground">
-                      {selectedArticle.author}
-                    </span>
+              <div className="pt-3 border-t">
+                <div className="prose prose-sm max-w-none text-gray-700 dark:text-gray-300">
+                  {selectedArticle.content && (
+                    <div dangerouslySetInnerHTML={{ __html: selectedArticle.content.replace(/\n/g, '<br>') }} />
                   )}
                 </div>
-                {selectedArticle.description && (
-                  <p className="text-xs text-muted-foreground">
-                    {selectedArticle.description}
-                  </p>
-                )}
               </div>
             )}
           </div>
