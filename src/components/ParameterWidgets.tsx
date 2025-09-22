@@ -118,7 +118,7 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1.5 text-sm">
         <div className={`line-clamp-1 flex gap-2 font-medium ${getTrendColor()}`}>
-          {getTrendText()}
+          {getTrendText()} {parameter.trend === 'up' ? '↗' : parameter.trend === 'down' ? '↘' : '→'}
         </div>
         <div className="text-muted-foreground">
           Среднее за последние 7 дней
