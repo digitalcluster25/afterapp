@@ -38,6 +38,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
   const [selectedMetrics, setSelectedMetrics] = useState<TrackedParameter[]>([])
   const [showMetricsHistory, setShowMetricsHistory] = useState(false)
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
+  const [goalValue, setGoalValue] = useState<number | null>(null)
 
   const loadSelectedMetrics = () => {
     if (typeof window !== 'undefined') {
@@ -73,6 +74,28 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
     }
   }
 
+  const loadGoalValue = () => {
+    if (typeof window !== 'undefined') {
+      const key = `goal_value_${goalId}`
+      const stored = localStorage.getItem(key)
+      if (stored) {
+        try {
+          const value = parseInt(stored)
+          setGoalValue(value)
+        } catch (error) {
+          console.error('Error loading goal value:', error)
+        }
+      }
+    }
+  }
+
+  const saveGoalValue = (value: number) => {
+    if (typeof window !== 'undefined') {
+      const key = `goal_value_${goalId}`
+      localStorage.setItem(key, value.toString())
+    }
+  }
+
   const saveSelectedMetrics = (metrics: TrackedParameter[]) => {
     if (typeof window !== 'undefined') {
       const key = `goal_metrics_${goalId}`
@@ -84,6 +107,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
     loadGoal()
     loadSelectedMetrics()
     loadSelectedArticle()
+    loadGoalValue()
   }, [goalId])
 
   // Сохраняем показатели при их изменении
@@ -193,6 +217,11 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
 
   const handleArticleSelect = (article: Article) => {
     setSelectedArticle(article)
+  }
+
+  const handleGoalValueSelect = (value: number) => {
+    setGoalValue(value)
+    saveGoalValue(value)
   }
 
   if (!goal) {
@@ -321,6 +350,30 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
         </CardHeader>
       </Card>
 
+      {/* Goal Value Selector */}
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle className="text-lg">Оценка цели на сегодня</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center gap-3">
+            {[1, 2, 3, 4, 5, 6, 7].map((value) => (
+              <button
+                key={value}
+                onClick={() => handleGoalValueSelect(value)}
+                className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-lg font-semibold transition-all hover:scale-110 ${
+                  goalValue === value
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-background text-foreground border-muted-foreground hover:border-primary'
+                }`}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Goal Metrics Selector */}
       <div className="space-y-4">
         <GoalMetricsSelector
@@ -339,7 +392,7 @@ export default function GoalDetail({ goalId }: GoalDetailProps) {
         
         {/* Metrics History */}
         {showMetricsHistory && (
-          <GoalMetricsHistory selectedMetrics={selectedMetrics} />
+          <GoalMetricsHistory selectedMetrics={selectedMetrics} goalValue={goalValue} />
         )}
       </div>
 

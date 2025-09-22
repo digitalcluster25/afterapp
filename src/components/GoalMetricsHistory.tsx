@@ -17,9 +17,10 @@ interface ParameterValue {
 
 interface GoalMetricsHistoryProps {
   selectedMetrics: TrackedParameter[]
+  goalValue?: number | null
 }
 
-export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHistoryProps) {
+export default function GoalMetricsHistory({ selectedMetrics, goalValue }: GoalMetricsHistoryProps) {
   const [parameterValues, setParameterValues] = useState<ParameterValue[]>([])
 
   const loadParameterValues = useCallback(() => {
@@ -119,6 +120,22 @@ export default function GoalMetricsHistory({ selectedMetrics }: GoalMetricsHisto
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Goal Value */}
+        {goalValue !== null && (
+          <div className="flex items-center justify-between p-4 border rounded-lg bg-primary/5">
+            <div className="flex items-center gap-3">
+              <span className="font-medium">Оценка цели</span>
+              <Badge variant="outline" className="bg-primary text-primary-foreground">
+                {goalValue} баллов
+              </Badge>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="w-4 h-4" />
+              <span>Сегодня</span>
+            </div>
+          </div>
+        )}
+        
         {selectedMetrics.map((metric) => {
           // Find today's values for this specific metric
           const metricValues = parameterValues.filter(value => value.parameterId === metric.id)
