@@ -5,7 +5,6 @@ import { TrackedParameter } from '@/types'
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -120,15 +119,15 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
     <Card className="@container/card">
       <CardHeader>
         <CardDescription>{parameter.name}</CardDescription>
-        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-          {parameter.weekAverage.toFixed(1)} {parameter.unit}
-        </CardTitle>
-        <CardAction>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {parameter.weekAverage.toFixed(1)} {parameter.unit}
+          </CardTitle>
           <Badge variant="outline" className={getTrendColor()}>
             {getTrendIcon()}
             {parameter.trendPercentage > 0 && `${parameter.trendPercentage.toFixed(1)}%`}
           </Badge>
-        </CardAction>
+        </div>
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1.5 text-sm">
         <div className={`line-clamp-1 flex gap-2 font-medium ${getTrendColor()}`}>
