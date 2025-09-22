@@ -473,14 +473,6 @@ export default function ParameterDetail({ parameterId }: ParameterDetailProps) {
         </div>
       </div>
 
-      {/* Article Selector */}
-      <div className="mb-8">
-        <ArticleSelector 
-          onArticleSelect={handleArticleSelect}
-          selectedArticleId={selectedArticle?.id}
-        />
-      </div>
-
       {/* Values History with Tabs */}
       <div>
         <div className="flex items-center gap-4 mb-4">
@@ -554,6 +546,14 @@ export default function ParameterDetail({ parameterId }: ParameterDetailProps) {
             <ValuesList values={getYearValues(values)} parameter={parameter} onDeleteValue={handleDeleteValue} />
           </TabsContent>
         </Tabs>
+      </div>
+
+      {/* Article Selector */}
+      <div className="mt-8">
+        <ArticleSelector 
+          onArticleSelect={handleArticleSelect}
+          selectedArticleId={selectedArticle?.id}
+        />
       </div>
 
       </PageWrapper>
