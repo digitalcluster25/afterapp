@@ -31,6 +31,7 @@ import {
 } from "lucide-react"
 import PageWrapper from "@/components/PageWrapper"
 import Section from "@/components/Section"
+import ArticleSelector from "@/components/ArticleSelector"
 
 interface ParameterDetailProps {
   parameterId: number
@@ -197,11 +198,34 @@ export default function ParameterDetail({ parameterId }: ParameterDetailProps) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [editingTitle, setEditingTitle] = useState('')
+  const [selectedArticle, setSelectedArticle] = useState<any>(null)
 
   useEffect(() => {
     loadParameter()
     loadValues()
+    loadSelectedArticle()
   }, [parameterId])
+
+  const loadSelectedArticle = () => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(`parameter_article_${parameterId}`)
+      if (stored) {
+        try {
+          const article = JSON.parse(stored)
+          setSelectedArticle(article)
+        } catch (error) {
+          console.error('Error loading selected article:', error)
+        }
+      }
+    }
+  }
+
+  const handleArticleSelect = (article: any) => {
+    setSelectedArticle(article)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`parameter_article_${parameterId}`, JSON.stringify(article))
+    }
+  }
 
   const loadParameter = () => {
     if (typeof window !== 'undefined') {
@@ -447,6 +471,14 @@ export default function ParameterDetail({ parameterId }: ParameterDetailProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Article Selector */}
+      <div className="mb-8">
+        <ArticleSelector 
+          onArticleSelect={handleArticleSelect}
+          selectedArticleId={selectedArticle?.id}
+        />
       </div>
 
       {/* Values History with Tabs */}
