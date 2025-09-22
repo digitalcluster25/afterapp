@@ -74,6 +74,7 @@ npm run dev
 - **[docs/TECHNICAL_SPECIFICATION.md](./docs/TECHNICAL_SPECIFICATION.md)** - Техническая спецификация
 - **[docs/USER_SCENARIOS.md](./docs/USER_SCENARIOS.md)** - Пользовательские сценарии
 - **[docs/SETUP_INSTRUCTIONS.md](./docs/SETUP_INSTRUCTIONS.md)** - Инструкции по воссозданию
+- **[docs/DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md)** - Дизайн-система и правила стилизации
 - **[docs/README.md](./docs/README.md)** - Индекс документации
 
 ### Структура проекта

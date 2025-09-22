@@ -22,31 +22,3 @@
 4. **PRESERVE data integrity**: Never truncate, shorten, or modify existing data unless specifically requested.
 5. **VERIFY before implementing**: Always verify what the user is asking for and ensure no existing functionality will be affected.
 
-## UI/UX Design Rules
-
-### Component Library
-- **ONLY use shadcn/ui library** for all UI components and elements
-- Do not create custom components when shadcn/ui equivalents exist
-- Use shadcn/ui MCP server for adding new components: `npx shadcn@latest add @shadcn/component-name`
-- When shadcn/ui doesn't provide a specific component, use Tailwind CSS utilities for styling
-
-### Color Scheme
-- **Grayscale color palette ONLY** for the entire interface
-- Use only shades of gray, black, and white
-- Apply grayscale colors to ALL elements including:
-  - Text and typography
-  - Backgrounds and surfaces
-  - Borders and dividers
-  - Buttons and interactive elements
-  - Icons and graphics
-  - Charts and data visualizations
-- No colored elements (no blues, greens, reds, etc.) except for semantic meanings (success/error states)
-- Icons must be black, white, or grayscale only
-
-### Visual Design
-- Clean, minimalist aesthetic
-- Consistent spacing and typography
-- Smooth, gentle animations (fade, contour, background animations)
-- No shadows for animations
-- Sans-serif fonts (similar to Helvetica Pro)
-- Professional, modern appearance
