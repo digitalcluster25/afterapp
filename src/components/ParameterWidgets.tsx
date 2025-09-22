@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { TrendingUp, TrendingDown, Minus } from "lucide-react"
 
 interface ParameterValue {
   id: number
@@ -82,17 +81,6 @@ const formatDate = (dateString: string): string => {
 
 // Компонент виджета параметра
 const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
-  const getTrendIcon = () => {
-    switch (parameter.trend) {
-      case 'up':
-        return <TrendingUp className="size-4" />
-      case 'down':
-        return <TrendingDown className="size-4" />
-      default:
-        return <Minus className="size-4" />
-    }
-  }
-
   const getTrendColor = () => {
     switch (parameter.trend) {
       case 'up':
@@ -124,7 +112,7 @@ const ParameterWidget = ({ parameter }: { parameter: ParameterWithValues }) => {
             {parameter.weekAverage.toFixed(1)} {parameter.unit}
           </CardTitle>
           <Badge variant="outline" className={getTrendColor()}>
-            {getTrendIcon()}
+            {parameter.trend === 'up' ? '↗' : parameter.trend === 'down' ? '↘' : '→'}
           </Badge>
         </div>
       </CardHeader>
